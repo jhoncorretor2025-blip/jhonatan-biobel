@@ -1,0 +1,131 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Application user profile",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] }
+      },
+      "required": ["uid", "email"]
+    },
+    "Salesperson": {
+      "title": "Salesperson",
+      "description": "Salesperson profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["active", "inactive", "training"] },
+        "commissionRate": { "type": "number" },
+        "commissionType": { "type": "string", "enum": ["percentage", "fixed"] },
+        "commissionSource": { "type": "string", "enum": ["total", "profit"] },
+        "commissionPeriod": { "type": "string", "enum": ["monthly", "weekly"] },
+        "startDate": { "type": "string" },
+        "employmentType": { "type": "string" },
+        "function": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product in inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "brand": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "cost": { "type": "number" },
+        "stock": { "type": "number" },
+        "minStock": { "type": "number" },
+        "image": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "stock"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Sales record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "customerId": { "type": "string" },
+        "salesperson": { "type": "string" },
+        "total": { "type": "number" },
+        "discount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "status": { "type": "string", "enum": ["completed", "cancelled", "refunded"] },
+        "type": { "type": "string" },
+        "items": { "type": "array" }
+      },
+      "required": ["id", "date", "total", "items"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "gender": { "type": "string", "enum": ["Masculino", "Feminino", "Outro"] },
+        "city": { "type": "string" },
+        "address": { "type": "string" },
+        "birthDate": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "phone"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Company settings",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string" },
+        "companyLogo": { "type": "string" },
+        "companyPhone": { "type": "string" },
+        "companyEmail": { "type": "string" },
+        "companyAddress": { "type": "string" },
+        "companyWebsite": { "type": "string" },
+        "darkMode": { "type": "boolean" },
+        "themeColor": { "type": "string" },
+        "monthlyGoal": { "type": "object" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/salespersons/{id}": {
+      "schema": "Salesperson",
+      "description": "Salespersons list"
+    },
+    "/products/{id}": {
+      "schema": "Product",
+      "description": "Products inventory"
+    },
+    "/sales/{id}": {
+      "schema": "Sale",
+      "description": "Sales history"
+    },
+    "/customers/{id}": {
+      "schema": "Customer",
+      "description": "Customers list"
+    },
+    "/settings/company": {
+      "schema": "Settings",
+      "description": "Global company settings"
+    }
+  }
+}

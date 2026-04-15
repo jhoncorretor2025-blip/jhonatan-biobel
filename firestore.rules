@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper to check if user is an admin
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Products: Read for all auth, Write for admin
+    match /products/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Sales: Read for all auth, Write for admin
+    match /sales/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Customers: Read for all auth, Write for admin
+    match /customers/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Users: Read for all auth, Write for admin (or own doc)
+    match /users/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || (isAuthenticated() && request.auth.uid == id);
+    }
+    
+    // Settings: Read for all, Write for admin
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Brands: Read for all auth, Write for admin
+    match /brands/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Cashier Sessions: Read for all auth, Write for admin
+    match /cashier_sessions/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Campaigns: Read for all auth, Write for admin
+    match /campaigns/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Fixed Costs: Read for all auth, Write for admin
+    match /fixed_costs/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // Giveaways: Read for all auth, Write for admin
+    match /giveaways/{id} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Fallback
+    match /{path=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}
