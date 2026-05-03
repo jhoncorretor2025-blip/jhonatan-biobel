@@ -1,0 +1,5 @@
+{
+  "name": "VendaPronta Admin",
+  "description": "Um sistema abrangente de gestão de vendas e estoque com painel, registro de produtos, controle de caixa e recursos de PDV.",
+  "requestFramePermissions": []
+}
