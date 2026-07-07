@@ -1,0 +1,155 @@
+50:    return obj.map(v => cleanData(v));
+55:        .map(([k, v]) => [k, cleanData(v)])
+463:      {notifications.map((n) => (
+512:    setMonthlyGoals(monthlyGoals.map((g: any) => 
+529:    setMonthlyGoals(monthlyGoals.map((g: any) => 
+663:                  {currentGoal.holidays.map((h: string) => (
+744:            {staff.map((s: Staff) => (
+814:      .map(([name, total]) => ({ name, total }))
+906:                {salesRankingData.map((entry, index) => (
+950:        ].map((metric, i) => (
+1071:        setGiveaways(giveaways.map((g: Giveaway) => g.id === giveawayData.id ? giveawayData : g));
+1089:    const pool = giveaway.participants.length > 0 ? giveaway.participants : customers.map((c: any) => c.id);
+1107:      setGiveaways(giveaways.map((g: Giveaway) => g.id === giveaway.id ? updatedGiveaway : g));
+1141:        {giveaways.map((g: Giveaway) => (
+1286:  const categories = Array.from(new Set(products.map(p => p.category)));
+1295:    const tableData = filteredSales.map(sale => [
+1318:    const data = filteredSales.map(sale => ({
+1326:      Itens: sale.items.map(i => `${i.name} (${i.quantity})`).join(', ')
+1385:            {staff.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+1396:            {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+1420:              {filteredSales.map(sale => (
+1484:      const lastSaleDate = new Date(Math.max(...pSales.map(s => new Date(s.date).getTime())));
+1528:      const [year, month] = g.id.split('-').map(Number);
+1632:      topBrands: Object.entries(brandSales).map(([name, total]) => ({ name, total })).sort((a, b) => b.total - a.total).slice(0, 5),
+1637:      staff: Object.entries(staffTotals).sort((a, b) => b[1].total - a[1].total).map(([name, data]) => ({ name, ...data })),
+1639:      categoryTrends: Object.entries(categoryTotals).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value),
+1724:        ].map((tab) => (
+1773:            {stats.map((stat, i) => (
+1852:                      data={Object.entries(financial.breakdown).map(([name, value]) => ({ name, value }))}
+1860:                      {Object.entries(financial.breakdown).map(([method], index) => (
+1869:                {Object.entries(financial.breakdown).slice(0, 4).map(([method, value], i) => (
+1893:                {topProducts.map((p, i) => (
+1920:                {salesByStaff.slice(0, 5).map((staff, i) => (
+2028:                  .map(p => (
+2063:              {topProducts.map((p, i) => (
+2086:              {topBrands.map((b, i) => (
+2134:                ].map((metric, idx) => (
+2219:                {Object.entries(financial.breakdown).map(([method, value]) => (
+2236:                <BarChart data={Object.entries(financial.breakdown).map(([name, value]) => ({ name, value }))}>
+2278:                {customerStats.topCustomers.map((c, i) => (
+2304:                      data={Object.entries(customerStats.genderDist).map(([name, value]) => ({ name, value }))}
+2312:                      {Object.entries(customerStats.genderDist).map(([gender], index) => (
+2330:              {Object.entries(customerStats.cityDist).sort((a, b) => (b[1] as number) - (a[1] as number)).slice(0, 8).map(([city, count]) => (
+2355:              salesByStaff.map((item, i) => (
+2409:                  {salesByCategory.map((entry, index) => (
+2428:            {salesByCategory.slice(0, 4).map((item, i) => (
+2447:              <BarChart data={salesByDay.map(([name, total]) => ({ name, total }))}>
+2549:      const newItems = (prev.comboItems || []).map(item => 
+2656:    setProducts(prev => prev.map(p => 
+2721:        setProducts(prev => prev.map(p => p.id === editingProduct.id ? productData : p));
+2761:            {lowStockProducts.slice(0, 5).map(p => (
+2806:                {brands.map(b => (
+2819:                {productCategories.map(c => (
+2857:            {filteredProducts.map((product) => (
+2906:                            {product.comboItems?.slice(0, 2).map((ci, idx) => {
+2961:        {filteredProducts.map((product) => (
+3135:                      ].map((t) => (
+3174:                        {formData.comboItems?.map((item, idx) => {
+3215:                          {products.filter(p => (p.type === 'avulso' || !p.type) && !formData.comboItems?.some(ci => ci.productId === p.id)).map(p => (
+3288:                      {brands.map(brand => (
+3306:                      {productCategories.map(cat => (
+3460:                    {productCategories.map(cat => (
+3548:      ? new Date(Math.max(...customerSales.map(s => new Date(s.date).getTime())))
+3644:        setCustomers(prev => prev.map(c => c.id === customerData.id ? customerData : c));
+3725:            {(['TODOS', 'ATIVOS', 'INATIVOS', 'VIPS'] as const).map((f) => (
+3755:              {filteredCustomers.map((customer) => {
+3847:          {filteredCustomers.map((customer) => {
+4103:                        getCustomerStats(selectedCustomerForView.id).preferredProductsValue.map((p, idx) => (
+4146:                        .map(sale => (
+4154:                                {sale.items.map(i => i.name).join(', ')}
+4232:        setStaff(prev => prev.map(s => s.id === editingStaff.id ? staffData : s));
+4423:              {staff.map((s) => (
+4509:                      {formData.activities?.map((activity, index) => (
+4621:        {categories.map((cat, i) => (
+4641:              {cat.items.map((item, idx) => (
+4708:        setRoutines(prev => prev.map(r => r.id === editingRoutine.id ? routineData : r));
+4723:    const updatedActivities = routine.activities.map(a => {
+4737:      setRoutines(prev => prev.map(r => r.id === routineId ? { ...r, activities: updatedActivities } : r));
+4783:    setRoutines(prev => prev.map(r => r.id === routineId ? {
+4785:      activities: r.activities.map(a => ({ ...a, startedAt: undefined, completedAt: undefined, completed: false }))
+4818:        {routines.map(routine => {
+4893:                {routine.activities.map(activity => (
+4994:                {Array.from(new Set(routines.flatMap(r => r.activities.map(a => a.description)))).map(desc => {
+5154:                    {staff.map(s => <option key={s.id} value={s.id}>{s.name} ({s.role})</option>)}
+5168:                  {formData.activities?.map((activity, index) => (
+5267:        setCampaigns(prev => prev.map(c => c.id === editingCampaign.id ? campaignData : c));
+5305:        const lastSaleDate = new Date(Math.max(...customerSales.map(s => new Date(s.date).getTime())));
+5362:        {campaigns.map(campaign => (
+5499:          const migratedBrands = data.brands.map((b: any, index: number) => 
+5519:    const salesData = sales.map(s => ({
+5526:      Itens: s.items.map(i => `${i.name} (${i.quantity}x)`).join(', ')
+5532:    const productsData = products.map(p => ({
+5546:    const customersData = customers.map(c => ({
+5556:    const brandsData = brands.map(b => ({
+5564:    const costsData = fixedCosts.map(c => ({
+5628:          const formatted: Product[] = imported.map(p => ({
+5794:          const formatted: Customer[] = imported.map(c => ({
+5817:              const formatted: Product[] = imported.map(p => ({
+6275:          {sale.items.map(i => i.name).join(', ')}
+6432:      setSales(prev => prev.map(s => s.id === selectedSale.id ? { ...s, notes: editingNotes } : s));
+6471:      setSales(prev => prev.map(s => s.id === saleId ? { ...s, status: newStatus } : s));
+6538:              {availableStatuses.map(status => (
+6573:            {filteredSales.slice(0, visibleCount).map((sale) => (
+6593:        {filteredSales.slice(0, visibleCount).map((sale) => (
+6661:                        {selectedSale.items.map((item, idx) => (
+6750:    ...(currentSession?.withdrawals.map(w => ({ ...w, isSale: false })) || []),
+6751:    ...sessionSales.map(s => ({
+6905:                  {allTransactions.map((t: any) => (
+7173:        setBrands(brands.map(b => b.id === brandData.id ? brandData : b));
+7225:            brands.map((brand: Brand) => (
+7530:      setFixedCosts(fixedCosts.map((c: any) => c.id === id ? updatedCost : c));
+7561:            {fixedCosts.map((cost: any) => (
+7935:    return Array.from(new Set(relevantProducts.map(p => p.category).filter(Boolean))) as string[];
+7940:    return Array.from(new Set(relevantProducts.map(p => p.brand).filter(Boolean))) as string[];
+7995:          const migratedBrands = parsed.brands.map((b: any, index: number) => 
+8097:        ...closedSession.withdrawals.map(w => ({ 
+8103:        ...sessionSales.map(s => ({
+8114:        body: allMovs.map(m => [m.data, m.tipo, m.valor, m.motivo]),
+8126:    setCashierSessions(prev => prev.map(s => s.id === closedSession.id ? closedSession : s));
+8146:    setCashierSessions(prev => prev.map(s => s.id === updatedSession.id ? updatedSession : s));
+8304:      items: cart.map(item => ({...item})),
+8362:      setCashierSessions(prev => prev.map(s => s.id === updatedSession.id ? updatedSession : s));
+8381:        return prev.map(item => 
+8482:      ? sale.payments.map(p => `${p.method}: ${formatCurrency(p.amount)}`).join('\n')
+8499:${sale.items.map(item => {
+8503:    const details = product.comboItems.map(subItem => {
+8539:      ? sale.payments.map(p => `${p.method}: ${formatCurrency(p.amount)}`).join('\n')
+8556:${sale.items.map(item => {
+8560:    const details = product.comboItems.map(subItem => {
+8673:          const detailRows = product.comboItems.map(subItem => {
+8949:            ].map((item) => (
+8986:            ].map((item) => (
+9014:            ].map((item) => (
+9043:            ].map((item) => (
+9070:            ].map((item: any) => (
+9097:            ].map((item) => (
+9133:            ].map((item) => (
+9234:                          {globalResults.products.map(p => (
+9258:                          {globalResults.customers.map(c => (
+9523:                            ].map((tab) => (
+9558:                            {posCategories.sort().map(cat => (
+9588:                            {posBrands.sort().map(brand => (
+9629:                        filteredProducts.map((product) => (
+9752:                      {cart.map(item => (
+9783:                                    setCart(prev => prev.map(i => i.productId === item.productId ? { ...i, quantity: i.quantity - 1, total: (i.quantity - 1) * i.price } : i));
+9793:                                  setCart(prev => prev.map(i => i.productId === item.productId ? { ...i, quantity: i.quantity + 1, total: (i.quantity + 1) * i.price } : i));
+9876:                                  {filteredCustomers.map(customer => (
+9937:                                  .map(sale => (
+10043:                              {splitPayments.map((p, index) => (
+10056:                                      {['PIX', 'CRÉDITO', 'DÉBITO', 'DINHEIRO', 'LINK', 'PARCELADO', 'OUTROS'].map(m => (
+10128:                            ].map(method => (
+10203:                        cart.map(item => (
+10502:                      {cart.map((item, idx) => (
+10594:                      {['ALESANDRA', 'LETICIA', 'ESTAGIÁRIA'].map(v => {
+10660:                {lastCompletedSale.items.map((item: any, idx: number) => (
