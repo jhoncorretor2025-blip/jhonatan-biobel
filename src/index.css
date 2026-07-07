@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-50: color-mix(in srgb, var(--primary-color) 10%, white);
+  --color-brand-100: color-mix(in srgb, var(--primary-color) 20%, white);
+  --color-brand-200: color-mix(in srgb, var(--primary-color) 30%, white);
+  --color-brand-300: color-mix(in srgb, var(--primary-color) 40%, white);
+  --color-brand-400: color-mix(in srgb, var(--primary-color) 60%, white);
+  --color-brand-500: var(--primary-color);
+  --color-brand-600: color-mix(in srgb, var(--primary-color) 90%, black);
+  --color-brand-700: color-mix(in srgb, var(--primary-color) 80%, black);
+  --color-brand-800: color-mix(in srgb, var(--primary-color) 70%, black);
+  --color-brand-900: color-mix(in srgb, var(--primary-color) 60%, black);
+  --color-brand-950: color-mix(in srgb, var(--primary-color) 50%, black);
+}
+
+:root {
+  --primary-color: #be123c; /* Rose color */
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.glass-card {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+}
+
+.dark {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media print {
+  /* Hide main application layouts, modals, and helper controls during print */
+  aside, main, header, footer, nav, button, .toast-notification, .modal-backdrop {
+    display: none !important;
+  }
+  
+  /* Reset body styling and backgrounds for black and white printing */
+  html, body {
+    background: white !important;
+    color: black !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Make sure thermal-receipt remains visible, fills width exactly, and has no page break/blank page issues */
+  #thermal-receipt {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    visibility: visible !important;
+    page-break-inside: avoid !important;
+  }
+  
+  #thermal-receipt, #thermal-receipt * {
+    visibility: visible !important;
+  }
+  
+  @page {
+    size: 80mm auto;
+    margin: 0 !important;
+  }
+}
