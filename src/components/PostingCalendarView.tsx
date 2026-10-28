@@ -47,6 +47,7 @@ export function PostingCalendarView() {
   const [saved, setSaved] = useState(true);
   const [showDriveSettings, setShowDriveSettings] = useState(false);
   const [driveDraft, setDriveDraft] = useState('');
+  const [calendarMode, setCalendarMode] = useState<'week' | 'month'>('week');
 
   useEffect(() => {
     try {
@@ -79,6 +80,37 @@ export function PostingCalendarView() {
   const dayPosts = useMemo(() => posts
     .filter(post => post.date === selectedDate)
     .sort((a, b) => a.time.localeCompare(b.time)), [posts, selectedDate]);
+
+  const weekPosts = useMemo(() => posts.filter(post => {
+    const key = post.date;
+    return key >= localDateKey(weekDates[0]) && key <= localDateKey(weekDates[5]);
+  }), [posts, weekDates]);
+  const weekStats = useMemo(() => ({
+    total: weekPosts.length,
+    pending: weekPosts.filter(post => post.status === 'Pendente').length,
+    published: weekPosts.filter(post => post.status === 'Publicado').length,
+    delayed: weekPosts.filter(post => post.status === 'Adiado').length,
+  }), [weekPosts]);
+  const monthStart = useMemo(() => new Date(Number(selectedDate.slice(0, 4)), Number(selectedDate.slice(5, 7)) - 1, 1), [selectedDate]);
+  const monthDates = useMemo(() => {
+    const first = new Date(monthStart);
+    first.setDate(first.getDate() - first.getDay());
+    return Array.from({ length: 42 }, (_, i) => {
+      const date = new Date(first);
+      date.setDate(first.getDate() + i);
+      return date;
+    });
+  }, [monthStart]);
+  const moveMonth = (amount: number) => {
+    const next = new Date(monthStart.getFullYear(), monthStart.getMonth() + amount, 1);
+    const key = localDateKey(next);
+    setSelectedDate(key);
+    setWeekStart(mondayOf(next));
+  };
+  const selectCalendarDate = (date: Date) => {
+    setSelectedDate(localDateKey(date));
+    setWeekStart(mondayOf(date));
+  };
 
   const updatePost = (id: string, field: keyof PostItem, value: string) => {
     setPosts(current => current.map(post => post.id === id ? { ...post, [field]: value } as PostItem : post));
@@ -183,19 +215,28 @@ export function PostingCalendarView() {
         <p className="mt-2 text-xs text-slate-500">O link fica salvo neste navegador. Compartilhe a pasta com as pessoas que precisam acessar os materiais.</p>
       </div>}
 
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900"><p className="text-sm font-medium text-slate-500">Postagens na semana</p><p className="mt-1 text-3xl font-extrabold text-slate-900 dark:text-white">{weekStats.total}</p><p className="mt-1 text-xs text-slate-500">Planejadas para segunda a sábado</p></div>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm dark:border-amber-900 dark:bg-amber-950/30"><p className="text-sm font-medium text-amber-800 dark:text-amber-300">Pendentes</p><p className="mt-1 text-3xl font-extrabold text-amber-900 dark:text-amber-200">{weekStats.pending}</p><p className="mt-1 text-xs text-amber-700 dark:text-amber-400">Aguardando publicação</p></div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm dark:border-emerald-900 dark:bg-emerald-950/30"><p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Publicadas</p><p className="mt-1 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200">{weekStats.published}</p><p className="mt-1 text-xs text-emerald-700 dark:text-emerald-400">Concluídas nesta semana</p></div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 shadow-sm dark:border-rose-900 dark:bg-rose-950/30"><p className="text-sm font-medium text-rose-800 dark:text-rose-300">Adiadas</p><p className="mt-1 text-3xl font-extrabold text-rose-900 dark:text-rose-200">{weekStats.delayed}</p><p className="mt-1 text-xs text-rose-700 dark:text-rose-400">Precisam de nova data</p></div>
+      </div>
+
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Semana selecionada</p>
-          <h2 className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{formatShort(weekDates[0])} – {formatShort(weekDates[5])}</h2>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{calendarMode === 'week' ? 'Semana selecionada' : 'Mês selecionado'}</p>
+          <h2 className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{calendarMode === 'week' ? `${formatShort(weekDates[0])} – ${formatShort(weekDates[5])}` : monthStart.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button onClick={() => setCalendarMode('week')} className={`rounded-xl border px-3 py-2 text-sm font-semibold ${calendarMode === 'week' ? 'border-rose-600 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300' : 'border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800'}`}>Semana</button>
+          <button onClick={() => setCalendarMode('month')} className={`rounded-xl border px-3 py-2 text-sm font-semibold ${calendarMode === 'month' ? 'border-rose-600 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300' : 'border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800'}`}>Mês</button>
           <button onClick={() => { const today = new Date(); setWeekStart(mondayOf(today)); setSelectedDate(localDateKey(today)); }} className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800">Hoje</button>
-          <button onClick={() => changeWeek(-1)} aria-label="Semana anterior" className="rounded-xl border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"><ChevronLeft size={19}/></button>
-          <button onClick={() => changeWeek(1)} aria-label="Próxima semana" className="rounded-xl border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"><ChevronRight size={19}/></button>
+          <button onClick={() => calendarMode === 'week' ? changeWeek(-1) : moveMonth(-1)} aria-label={calendarMode === 'week' ? 'Semana anterior' : 'Mês anterior'} className="rounded-xl border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"><ChevronLeft size={19}/></button>
+          <button onClick={() => calendarMode === 'week' ? changeWeek(1) : moveMonth(1)} aria-label={calendarMode === 'week' ? 'Próxima semana' : 'Próximo mês'} className="rounded-xl border border-slate-200 p-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"><ChevronRight size={19}/></button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+      {calendarMode === 'week' ? <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
         {weekDates.map(date => {
           const key = localDateKey(date);
           const count = posts.filter(post => post.date === key).length;
@@ -207,6 +248,19 @@ export function PostingCalendarView() {
             <span className="mt-2 flex items-center justify-between gap-1 text-xs text-slate-500"><span>{count} postagem(ns)</span>{today && <span className="rounded-full bg-rose-600 px-2 py-0.5 text-white">Hoje</span>}</span>
           </button>;
         })}
+      </div> : <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/70">{['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => <div key={day} className="px-1 py-3 text-center text-xs font-bold text-slate-500 sm:px-3">{day}</div>)}</div>
+        <div className="grid grid-cols-7">{monthDates.map(date => {
+          const key = localDateKey(date);
+          const count = posts.filter(post => post.date === key).length;
+          const active = selectedDate === key;
+          const inMonth = date.getMonth() === monthStart.getMonth();
+          const today = key === localDateKey(new Date());
+          const published = posts.filter(post => post.date === key && post.status === 'Publicado').length;
+          const pending = posts.filter(post => post.date === key && post.status === 'Pendente').length;
+          return <button key={key} onClick={() => selectCalendarDate(date)} className={`min-h-20 border-b border-r border-slate-100 p-1 text-left transition sm:min-h-24 sm:p-2 dark:border-slate-800 ${active ? 'bg-rose-50 ring-2 ring-inset ring-rose-500 dark:bg-rose-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-800'} ${inMonth ? '' : 'opacity-45'}`}><span className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${today ? 'bg-rose-600 text-white' : active ? 'text-rose-700 dark:text-rose-300' : 'text-slate-700 dark:text-slate-200'}`}>{date.getDate()}</span>{count > 0 && <span className="mt-1 block text-[10px] font-semibold leading-tight text-slate-600 sm:text-xs dark:text-slate-300">{count} post.</span>}{count > 0 && <span className="mt-1 hidden text-[10px] text-slate-500 sm:block">{published} pub. · {pending} pend.</span>}</button>;
+        })}</div>
+        <div className="flex flex-wrap gap-3 border-t border-slate-200 px-3 py-2 text-xs text-slate-500 dark:border-slate-700"><span>● Dias com número indicam postagens planejadas</span><span>Selecione um dia para ver ou editar as publicações abaixo</span></div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
