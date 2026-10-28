@@ -17,6 +17,7 @@ import { CustomersView } from './components/CustomersView';
 import { StaffView } from './components/StaffView';
 import { RoutineView } from './components/RoutineView';
 import { CampaignsView } from './components/CampaignsView';
+import { PostingCalendarView } from './components/PostingCalendarView';
 import { ConfigView } from './components/ConfigView';
 import { HelpView } from './components/HelpView';
 import { BackupView } from './components/BackupView';
@@ -2025,7 +2026,7 @@ export default function App() {
       { id: 'CONSULTA', items: ['sales', 'reports', 'dashboard', 'improvement'] },
       { id: 'FINANCEIRO', items: ['costs', 'financial_accounts', 'cash_flow', 'cashier'] },
       { id: 'FISCAL', items: ['fiscal_cfop', 'fiscal_emissao', 'fiscal_observacoes', 'fiscal_serie', 'fiscal_ibpt', 'fiscal_nfe', 'fiscal_cnae'] },
-      { id: 'MARKETING_CRM', items: ['customers', 'campaigns', 'giveaways', 'raffles', 'manager_campaign', 'performance'] },
+      { id: 'MARKETING_CRM', items: ['customers', 'campaigns', 'posting_calendar', 'giveaways', 'raffles', 'manager_campaign', 'performance'] },
       { id: 'TAREFAS_AGENDA', items: ['routine', 'funcao_rotina', 'agenda'] },
       { id: 'CONFIGURACOES', items: ['admin_profile', 'goals', 'config', 'backup', 'help'] }
     ];
@@ -4545,7 +4546,9 @@ ${(sale.items || []).map(item => {
                 items: [
                   { id: 'customers', label: 'Clientes (CRM)', icon: UserIcon },
                   { id: 'campaigns', label: 'Campanhas', icon: Sparkles },
+                  { id: 'posting_calendar', label: 'Calendário de Postagens', icon: Calendar },
                   { id: 'giveaways', label: 'Sorteios', icon: Gift },
+
                   { id: 'raffles', label: 'Campanhas de Rifas', icon: Ticket },
                   { id: 'manager_campaign', label: 'Campanha das Vendedoras', icon: Award },
                   { id: 'performance', label: 'Espelho da Vendedora', icon: Smartphone },
@@ -6741,6 +6744,8 @@ ${(sale.items || []).map(item => {
               }
             />
           )}
+
+          {activeTab === "posting_calendar" && <PostingCalendarView />}
 
           {activeTab === "campaigns" && (
             <CampaignsView
