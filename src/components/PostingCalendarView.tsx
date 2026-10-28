@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, Trash2, ExternalLink, FolderOpen, Save, CheckCircle2, Clock3, Instagram, Link2, Download } from 'lucide-react';
 
 type PostStatus = 'Pendente' | 'Publicado' | 'Adiado';
@@ -124,6 +125,40 @@ export function PostingCalendarView() {
     URL.revokeObjectURL(url);
   };
 
+  const exportWeekExcel = () => {
+    const startKey = localDateKey(weekDates[0]);
+    const endKey = localDateKey(weekDates[5]);
+    const header = ['Data', 'Dia da semana', 'Horário', 'Tipo de publicação', 'Postagem / campanha', 'Legenda / observações', 'Link do material', 'Status'];
+    const rows = posts
+      .filter(post => post.date >= startKey && post.date <= endKey)
+      .slice()
+      .sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
+      .map(post => [
+        post.date,
+        weekDays[new Date(post.date + 'T12:00:00').getDay()],
+        post.time,
+        post.type,
+        post.title,
+        post.notes,
+        post.link,
+        post.status
+      ]);
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      [`Calendário de Postagens BIOBEL — ${formatShort(weekDates[0])} a ${formatShort(weekDates[5])}`],
+      [],
+      header,
+      ...rows
+    ]);
+    worksheet['!cols'] = [
+      { wch: 13 }, { wch: 19 }, { wch: 10 }, { wch: 22 },
+      { wch: 32 }, { wch: 42 }, { wch: 45 }, { wch: 16 }
+    ];
+    worksheet['!autofilter'] = { ref: `A3:H${Math.max(3, rows.length + 3)}` };
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Postagens da semana');
+    XLSX.writeFile(workbook, `biobel-postagens-${startKey}-a-${endKey}.xlsx`);
+  };
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-5 p-3 sm:p-6">
       <div className="flex flex-col justify-between gap-4 rounded-2xl bg-gradient-to-r from-rose-700 to-pink-600 p-5 text-white shadow-lg sm:flex-row sm:items-center sm:p-7">
@@ -133,7 +168,8 @@ export function PostingCalendarView() {
           <p className="mt-2 max-w-2xl text-sm text-rose-50 sm:text-base">Organize os Stories, campanhas e ofertas da Biobel por dia e horário.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button onClick={exportCsv} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 py-2.5 text-sm font-bold hover:bg-white/20"><Download size={17}/> Exportar Excel/CSV</button>
+          <button onClick={exportWeekExcel} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-rose-700 hover:bg-rose-50"><Download size={17}/> Baixar semana em Excel</button>
+          <button onClick={exportCsv} className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 py-2.5 text-sm font-bold hover:bg-white/20"><Download size={17}/> Exportar tudo (CSV)</button>
           <button onClick={() => { setDriveDraft(driveUrl); setShowDriveSettings(v => !v); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-rose-700 hover:bg-rose-50"><FolderOpen size={17}/> Configurar Drive</button>
         </div>
       </div>
